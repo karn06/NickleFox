@@ -29,6 +29,7 @@ class MainViewModel @Inject constructor(
                     listMutableLiveData.postValue(response.data?.listOfData)
                 }
                 DataWrapper.Status.ERROR -> {
+                    listMutableLiveData.postValue(null)
                 }
             }
         }

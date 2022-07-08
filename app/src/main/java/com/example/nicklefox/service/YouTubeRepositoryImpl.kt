@@ -35,9 +35,8 @@ class YoutubeRepositoryImpl : YoutubeInterface {
         }
     }
 
-    fun createService(): YoutubeDataSource {
+    private fun createService(): YoutubeDataSource {
         val service = MainServiceCreator().createService(YoutubeService::class.java)
-        val source = YoutubeDataSource(service)
         return YoutubeDataSource(service)
     }
 }

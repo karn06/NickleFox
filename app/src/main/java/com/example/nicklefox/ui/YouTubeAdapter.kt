@@ -9,7 +9,7 @@ import com.example.nicklefox.R
 import com.example.nicklefox.data_holder.DataItem
 
 class YoutubeAdapter(private val contract: ClickContract) :
-    ListAdapter<DataItem, RecyclerView.ViewHolder>(ListItemCallback())  {
+    ListAdapter<DataItem, RecyclerView.ViewHolder>(ListItemCallback()) {
 
     class ListItemCallback : DiffUtil.ItemCallback<DataItem>() {
         override fun areItemsTheSame(
@@ -28,10 +28,9 @@ class YoutubeAdapter(private val contract: ClickContract) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.youtube_item, parent, false)
-        return YoutubeCatalogHolder(view,this)
+        return YoutubeCatalogHolder(view, this)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -51,7 +50,6 @@ class YoutubeAdapter(private val contract: ClickContract) :
     fun performClick(
         adapterPosition: Int,
         videoID: String?,
-    ) {
-        contract.itemClick(adapterPosition,videoID)
-    }
+    ) = contract.itemClick(adapterPosition, videoID)
+
 }

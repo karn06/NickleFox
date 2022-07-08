@@ -6,7 +6,6 @@ import javax.inject.Inject
 class YouTubeRepository @Inject constructor(
     private val dataSource: YoutubeInterface
 ) {
-
     suspend fun getList(
         maxSize: Int,
     ): DataWrapper<YoutubeApiResponse> {
