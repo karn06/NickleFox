@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity(), YoutubeAdapter.ClickContract {
 
         activityMainBinding.nestedScorllView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (scrollY == v.getChildAt(0).measuredHeight - v.measuredHeight) {
-                activityMainBinding.progressBar.visibility = View.VISIBLE
                 itemCount += 20
                 viewModel.callParseDataCall(itemCount)
             }
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity(), YoutubeAdapter.ClickContract {
     }
 
     private fun apiCall() {
-
+        activityMainBinding.progressBar.visibility = View.VISIBLE
         viewModel.callParseDataCall(itemCount)
         viewModel.listLiveData.observe(this) {
             activityMainBinding.progressBar.visibility = View.GONE

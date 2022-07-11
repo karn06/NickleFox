@@ -1,6 +1,8 @@
 package com.example.nicklefox.service
 
 import android.util.Log
+import com.example.nicklefox.data_holder.ErrorResponse
+import com.google.gson.Gson
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.EOFException
@@ -10,7 +12,7 @@ import javax.net.ssl.HttpsURLConnection
 abstract class BaseDataSource {
 
     protected suspend fun <T> execute(call: suspend () -> Response<T>): DataWrapper<T> {
-        var response: Response<T>? = null
+        val response: Response<T>?
         try {
             response = call()
             if (response.isSuccessful) {
@@ -24,13 +26,30 @@ abstract class BaseDataSource {
                         return error(response.code(), "Access Denied")
                     }
                     HttpsURLConnection.HTTP_INTERNAL_ERROR -> {
-                        return error(response.code(), "Internal Server Error")
-
+                        val errorResponse: ErrorResponse?
+                        return try {
+                            errorResponse =
+                                Gson().fromJson(it.charStream(), ErrorResponse::class.java)
+                            error(response.code(), errorResponse.error.message)
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace()
+                            error(response.code(), "Internal Server Error")
+                        }
                     }
                     HttpsURLConnection.HTTP_BAD_REQUEST -> {
-                        return error(response.code(), "Bad Request")
+                        val errorResponse: ErrorResponse?
+                        return try {
+                            errorResponse =
+                                Gson().fromJson(it.charStream(), ErrorResponse::class.java)
+                            // Send specific information about the error
+                            error(
+                                response.code(),
+                                "Bad Request: ${errorResponse.error.errors[0].message}"
+                            )
+                        } catch (e: java.lang.Exception) {
+                            error(response.code(), "Bad Request")
+                        }
                     }
-
                     HttpsURLConnection.HTTP_CLIENT_TIMEOUT -> {
                         return error(response.code(), "Client Timeout")
                     }
